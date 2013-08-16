@@ -43,6 +43,8 @@ public:
 // Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+//    afx_msg void OnButtonGenKey();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
@@ -55,6 +57,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+//    ON_COMMAND(IDC_BUTTON_GEN_KEY, &CAboutDlg::OnButtonGenKey)
 END_MESSAGE_MAP()
 
 
@@ -71,13 +74,16 @@ CTOTAL_ENCRYPTIONDlg::CTOTAL_ENCRYPTIONDlg(CWnd* pParent /*=NULL*/)
 
 void CTOTAL_ENCRYPTIONDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+    CDialogEx::DoDataExchange(pDX);
+    DDX_Control(pDX, IDC_MFCEDITVIDEO_FILE, m_VIdeoFileName);
+    DDX_Control(pDX, IDC_BUTTON_GEN_KEY, m_GenKey);
 }
 
 BEGIN_MESSAGE_MAP(CTOTAL_ENCRYPTIONDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+    ON_BN_CLICKED(IDC_BUTTON_GEN_KEY, &CTOTAL_ENCRYPTIONDlg::OnClickedButtonGenKey)
 END_MESSAGE_MAP()
 
 
@@ -166,3 +172,18 @@ HCURSOR CTOTAL_ENCRYPTIONDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+//void CAboutDlg::OnButtonGenKey()
+//{
+//    // TODO: Add your command handler code here
+//}
+
+
+void CTOTAL_ENCRYPTIONDlg::OnClickedButtonGenKey()
+{
+    // TODO: Add your control notification handler code here
+    CString FileName;
+    m_VIdeoFileName.GetWindowTextW(FileName);
+
+}
