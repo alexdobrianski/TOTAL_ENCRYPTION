@@ -34,6 +34,8 @@ class CTOTAL_ENCRYPTIONApp : public CWinApp
 {
 public:
 	CTOTAL_ENCRYPTIONApp();
+    char szIniFileName[_MAX_PATH];
+    char szVideoFileName[_MAX_PATH];
 
 // Overrides
 public:
