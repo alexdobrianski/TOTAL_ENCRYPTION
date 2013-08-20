@@ -48,4 +48,5 @@ public:
     CMFCEditBrowseCtrl m_VIdeoFileName;
     CButton m_GenKey;
     afx_msg void OnClickedButtonGenKey();
+    virtual BOOL DestroyWindow();
 };
