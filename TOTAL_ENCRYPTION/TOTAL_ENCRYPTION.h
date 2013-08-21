@@ -36,6 +36,13 @@ public:
 	CTOTAL_ENCRYPTIONApp();
     char szIniFileName[_MAX_PATH];
     char szVideoFileName[_MAX_PATH];
+    char szEncKeyFileName[_MAX_PATH];
+    char szDecKeyFileName[_MAX_PATH];
+
+    char szEncInFileName[_MAX_PATH];
+    char szEncOutFileName[_MAX_PATH];
+    char szDecInFileName[_MAX_PATH];
+    char szDecOutFileName[_MAX_PATH];
 
 // Overrides
 public:
