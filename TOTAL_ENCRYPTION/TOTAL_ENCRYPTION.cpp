@@ -43,7 +43,14 @@ CTOTAL_ENCRYPTIONApp::CTOTAL_ENCRYPTIONApp()
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
     memset(szIniFileName, 0, sizeof(szIniFileName));
-    memset(szVideoFileName, 0, sizeof(szIniFileName));
+    memset(szVideoFileName, 0, sizeof(szVideoFileName));
+
+    memset(szEncKeyFileName, 0, sizeof(szEncKeyFileName));
+    memset(szDecKeyFileName, 0, sizeof(szDecKeyFileName));
+    memset(szEncInFileName, 0, sizeof(szEncInFileName));
+    memset(szEncOutFileName, 0, sizeof(szEncOutFileName));
+    memset(szDecInFileName, 0, sizeof(szDecInFileName));
+    memset(szDecOutFileName, 0, sizeof(szDecOutFileName));
 }
 
 
@@ -91,6 +98,12 @@ BOOL CTOTAL_ENCRYPTIONApp::InitInstance()
     
     GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "VIDEO_FILE_NAME", "name", szVideoFileName, sizeof(szVideoFileName)-1,szIniFileName);
 
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_NAME", "name", szEncKeyFileName, sizeof(szEncKeyFileName)-1,szIniFileName);
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_NAME", "name", szDecKeyFileName, sizeof(szDecKeyFileName)-1,szIniFileName);
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_IN_FILE_NAME", "name", szEncInFileName, sizeof(szEncInFileName)-1,szIniFileName);
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_OUT_FILE_NAME", "name", szEncOutFileName, sizeof(szEncOutFileName)-1,szIniFileName);
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_IN_FILE_NAME", "name", szDecInFileName, sizeof(szDecInFileName)-1,szIniFileName);
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_OUT_FILE_NAME", "name", szDecOutFileName, sizeof(szDecOutFileName)-1,szIniFileName);
 
 	CTOTAL_ENCRYPTIONDlg dlg;
 	m_pMainWnd = &dlg;
@@ -99,6 +112,14 @@ BOOL CTOTAL_ENCRYPTIONApp::InitInstance()
     
     //strcpy(szVideoFileName,strTemp);
     WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "VIDEO_FILE_NAME",(LPCSTR) szVideoFileName, szIniFileName);
+
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_NAME",(LPCSTR) szEncKeyFileName, szIniFileName);
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_NAME",(LPCSTR) szDecKeyFileName, szIniFileName);
+
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_IN_FILE_NAME",(LPCSTR) szEncInFileName, szIniFileName);
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_OUT_FILE_NAME",(LPCSTR)szEncOutFileName, szIniFileName);
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_IN_FILE_NAME",(LPCSTR) szDecInFileName, szIniFileName);
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_OUT_FILE_NAME",(LPCSTR) szDecOutFileName, szIniFileName);
 
 	if (nResponse == IDOK)
 	{

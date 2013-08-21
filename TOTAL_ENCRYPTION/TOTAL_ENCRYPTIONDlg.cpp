@@ -77,6 +77,20 @@ void CTOTAL_ENCRYPTIONDlg::DoDataExchange(CDataExchange* pDX)
     CDialogEx::DoDataExchange(pDX);
     DDX_Control(pDX, IDC_MFCEDITVIDEO_FILE, m_VIdeoFileName);
     DDX_Control(pDX, IDC_BUTTON_GEN_KEY, m_GenKey);
+    DDX_Control(pDX, IDC_BUTTON_DEC_FILE, m_DecryptFile);
+    DDX_Control(pDX, IDC_BUTTON_DEC_MSG, m_DEcryptMessage);
+    DDX_Control(pDX, IDC_BUTTON_ENC_FILE, m_EncryptFile);
+    DDX_Control(pDX, IDC_BUTTON_ENC_MSG, m_EncryptMessage);
+    DDX_Control(pDX, IDC_MFCEDIT_DEC, m_DecryptKey);
+    DDX_Control(pDX, IDC_MFCEDIT_ENC, m_EncryptKey);
+    DDX_Control(pDX, IDC_MFCEDIT_ENC_INFILE, m_EncryptInFileName);
+    DDX_Control(pDX, IDC_MFCEDIT_ENC_OUTFILE, m_EncryptOutFileName);
+    DDX_Control(pDX, IDC_MFCEDIT_DEC_INFILE, m_DecryptInFileName);
+    DDX_Control(pDX, IDC_MFCEDIT_DEC_OUTFILE, m_DecryptOutFileName);
+    DDX_Control(pDX, IDC_EDIT_MSG_TEXT, m_Messagetext);
+    DDX_Control(pDX, IDC_EDIT_USER, m_UserName);
+    DDX_Control(pDX, IDC_PROGRESS_DEC_KEY_USAGE, m_DecryptFileUsage);
+    DDX_Control(pDX, IDC_PROGRESS_ENC_KEY_USEAGE, m_EncryptFileUsage);
 }
 
 BEGIN_MESSAGE_MAP(CTOTAL_ENCRYPTIONDlg, CDialogEx)
@@ -84,6 +98,10 @@ BEGIN_MESSAGE_MAP(CTOTAL_ENCRYPTIONDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
     ON_BN_CLICKED(IDC_BUTTON_GEN_KEY, &CTOTAL_ENCRYPTIONDlg::OnClickedButtonGenKey)
+    ON_BN_CLICKED(IDC_BUTTON_DEC_FILE, &CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecFile)
+    ON_BN_CLICKED(IDC_BUTTON_DEC_MSG, &CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecMsg)
+    ON_BN_CLICKED(IDC_BUTTON_ENC_FILE, &CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncFile)
+    ON_BN_CLICKED(IDC_BUTTON_ENC_MSG, &CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncMsg)
 END_MESSAGE_MAP()
 
 
@@ -121,6 +139,24 @@ BOOL CTOTAL_ENCRYPTIONDlg::OnInitDialog()
 	// TODO: Add extra initialization here
     CString strTemp = (CString)theApp.szVideoFileName;
     m_VIdeoFileName.SetWindowTextW(strTemp);
+
+    strTemp = (CString)theApp.szEncKeyFileName;
+    m_EncryptKey.SetWindowTextW(strTemp);
+
+    strTemp = (CString)theApp.szDecKeyFileName;
+    m_DecryptKey.SetWindowTextW(strTemp);
+
+    strTemp = (CString)theApp.szEncInFileName;
+    m_EncryptInFileName.SetWindowTextW(strTemp);
+
+    strTemp = (CString)theApp.szEncOutFileName;
+    m_EncryptOutFileName.SetWindowTextW(strTemp);
+
+    strTemp = (CString)theApp.szDecInFileName;
+    m_DecryptInFileName.SetWindowTextW(strTemp);
+
+    strTemp = (CString)theApp.szDecOutFileName;
+    m_DecryptOutFileName.SetWindowTextW(strTemp);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -297,5 +333,54 @@ BOOL CTOTAL_ENCRYPTIONDlg::DestroyWindow()
     m_VIdeoFileName.GetWindowTextW(strTemp);
     CStringA strTempA = (CStringA)strTemp; 
     strcpy(theApp.szVideoFileName,strTempA);
+
+    m_DecryptKey.GetWindowTextW(strTemp);
+    strTempA = (CStringA)strTemp; 
+    strcpy(theApp.szDecKeyFileName,strTempA);
+
+    m_EncryptKey.GetWindowTextW(strTemp);
+    strTempA = (CStringA)strTemp; 
+    strcpy(theApp.szEncKeyFileName,strTempA);
+
+    m_EncryptInFileName.GetWindowTextW(strTemp);
+    strTempA = (CStringA)strTemp; 
+    strcpy(theApp.szEncInFileName,strTempA);
+
+    m_EncryptOutFileName.GetWindowTextW(strTemp);
+    strTempA = (CStringA)strTemp; 
+    strcpy(theApp.szEncOutFileName,strTempA);
+
+    m_DecryptInFileName.GetWindowTextW(strTemp);
+    strTempA = (CStringA)strTemp; 
+    strcpy(theApp.szDecInFileName,strTempA);
+
+    m_DecryptOutFileName.GetWindowTextW(strTemp);
+    strTempA = (CStringA)strTemp; 
+    strcpy(theApp.szDecOutFileName,strTempA);
+
     return CDialogEx::DestroyWindow();
+}
+
+
+void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecFile()
+{
+    // TODO: Add your control notification handler code here
+}
+
+
+void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecMsg()
+{
+    // TODO: Add your control notification handler code here
+}
+
+
+void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncFile()
+{
+    // TODO: Add your control notification handler code here
+}
+
+
+void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncMsg()
+{
+    // TODO: Add your control notification handler code here
 }
