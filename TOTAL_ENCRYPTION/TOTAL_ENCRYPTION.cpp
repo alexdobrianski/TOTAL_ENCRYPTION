@@ -51,6 +51,8 @@ CTOTAL_ENCRYPTIONApp::CTOTAL_ENCRYPTIONApp()
     memset(szEncOutFileName, 0, sizeof(szEncOutFileName));
     memset(szDecInFileName, 0, sizeof(szDecInFileName));
     memset(szDecOutFileName, 0, sizeof(szDecOutFileName));
+    PosEncKey.QuadPart =0;
+    PosDecKey.QuadPart = 0;
 }
 
 
@@ -105,6 +107,25 @@ BOOL CTOTAL_ENCRYPTIONApp::InitInstance()
     GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_IN_FILE_NAME", "name", szDecInFileName, sizeof(szDecInFileName)-1,szIniFileName);
     GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_OUT_FILE_NAME", "name", szDecOutFileName, sizeof(szDecOutFileName)-1,szIniFileName);
 
+    char szTemp[256];
+    memset(szTemp,0,sizeof(szTemp));
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSL", "0", szTemp, sizeof(szTemp)-1,szIniFileName);
+    // TBD !!!! wrong ===  must be hexdesimal
+    PosEncKey.LowPart = atol(szTemp);
+    memset(szTemp,0,sizeof(szTemp));
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSH", "0", szTemp, sizeof(szTemp)-1,szIniFileName);
+    // TBD !!!! wrong ===  must be hexdesimal
+    PosEncKey.HighPart = atol(szTemp);
+
+    memset(szTemp,0,sizeof(szTemp));
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_POSL", "0", szTemp, sizeof(szTemp)-1,szIniFileName);
+    // TBD !!!! wrong ===  must be hexdesimal
+    PosDecKey.LowPart = atol(szTemp);
+    memset(szTemp,0,sizeof(szTemp));
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_POSH", "0", szTemp, sizeof(szTemp)-1,szIniFileName);
+    // TBD !!!! wrong ===  must be hexdesimal
+    PosDecKey.HighPart = atol(szTemp);
+
 	CTOTAL_ENCRYPTIONDlg dlg;
 	m_pMainWnd = &dlg;
     
@@ -120,6 +141,17 @@ BOOL CTOTAL_ENCRYPTIONApp::InitInstance()
     WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_OUT_FILE_NAME",(LPCSTR)szEncOutFileName, szIniFileName);
     WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_IN_FILE_NAME",(LPCSTR) szDecInFileName, szIniFileName);
     WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_OUT_FILE_NAME",(LPCSTR) szDecOutFileName, szIniFileName);
+
+    sprintf(szTemp,"%ld",PosEncKey.LowPart);
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSL",(LPCSTR) szTemp, szIniFileName);
+    sprintf(szTemp,"%ld",PosEncKey.HighPart);
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSH",(LPCSTR) szTemp, szIniFileName);
+    
+    sprintf(szTemp,"%ld",PosDecKey.LowPart);
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_POSL",(LPCSTR) szTemp, szIniFileName);
+    sprintf(szTemp,"%ld",PosDecKey.HighPart);
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_POSH",(LPCSTR) szTemp, szIniFileName);
+    
 
 	if (nResponse == IDOK)
 	{

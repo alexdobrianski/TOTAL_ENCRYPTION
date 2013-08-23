@@ -104,7 +104,33 @@ BEGIN_MESSAGE_MAP(CTOTAL_ENCRYPTIONDlg, CDialogEx)
     ON_BN_CLICKED(IDC_BUTTON_ENC_MSG, &CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncMsg)
 END_MESSAGE_MAP()
 
+void EncryptTotal(unsigned char *MessageIn, unsigned int InLen, unsigned char *MessageOut, unsigned int &OutLen, 
+    HANDLE KeyFile, LARGE_INTEGER &StartPosition, BOOL flStrongEncryption)
+{
+    DWORD dwSize;
+    unsigned char *CurrentKey = new unsigned char [InLen];
+    OutLen = 0;
+    if (CurrentKey)
+    {
+        SetFilePointer(KeyFile, StartPosition.LowPart, &StartPosition.HighPart, FILE_BEGIN);
+        ReadFile(KeyFile, CurrentKey, InLen, &dwSize, NULL);
+        for (unsigned int i = 0; i < InLen; i ++)
+        {
+            MessageOut[i] = MessageIn[i] ^ CurrentKey[i];
+        }
+        if (flStrongEncryption)
+        {
+            SetFilePointer(KeyFile, StartPosition.LowPart, &StartPosition.HighPart, FILE_BEGIN);
+            memset(CurrentKey, 0, InLen);
 
+            WriteFile(KeyFile, CurrentKey, InLen, &dwSize, NULL);
+            StartPosition.QuadPart += InLen;
+        }
+        OutLen = InLen;
+        delete CurrentKey;
+    }
+
+}
 // CTOTAL_ENCRYPTIONDlg message handlers
 
 BOOL CTOTAL_ENCRYPTIONDlg::OnInitDialog()
@@ -371,6 +397,45 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecFile()
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecMsg()
 {
     // TODO: Add your control notification handler code here
+    CString FileName;
+    m_EncryptKey.GetWindowTextW(FileName);
+    CStringA FileNameA = (CStringA)FileName;
+    strcpy(theApp.szDecKeyFileName,FileNameA);
+    HANDLE hKeyHandle = CreateFile(FileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hKeyHandle != NULL)
+    {
+        CString strMsg;
+        CStringA strMsgA;
+        m_Messagetext.GetWindowTextW(strMsg);
+        strMsgA = strMsg;
+        unsigned char *EncryptedMessage = new unsigned char[strMsgA.GetLength()+12];
+        if (EncryptedMessage)
+        {
+            char *EncryptedMessage2 = new char[(strMsgA.GetLength()+12)*2+1];
+            if (EncryptedMessage2)
+            {
+            
+                unsigned int szLenOut;
+                *(DWORD*)EncryptedMessage = strMsgA.GetLength();
+                *(DWORD*)&EncryptedMessage[4] = theApp.PosEncKey.LowPart;
+                *(DWORD*)&EncryptedMessage[8] = theApp.PosEncKey.HighPart;
+                memcpy(&EncryptedMessage[12], strMsgA,strMsgA.GetLength());
+                EncryptTotal(&EncryptedMessage[12], strMsgA.GetLength(), &EncryptedMessage[12], szLenOut, hKeyHandle, theApp.PosEncKey, FALSE);
+                for (int i =0; i < strMsgA.GetLength()+12; i++)
+                {
+                    sprintf(&EncryptedMessage2[i*2],"%02x", EncryptedMessage[i]);
+                }
+
+                strMsg = "=";
+                strMsg += EncryptedMessage2;
+                strMsg += "=";
+                m_Messagetext.SetWindowTextW(strMsg);
+                delete EncryptedMessage2;
+            }
+            delete EncryptedMessage;
+        }
+        CloseHandle(hKeyHandle);
+    }
 }
 
 
@@ -383,4 +448,42 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncFile()
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncMsg()
 {
     // TODO: Add your control notification handler code here
+    CString FileName;
+    m_EncryptKey.GetWindowTextW(FileName);
+    CStringA FileNameA = (CStringA)FileName;
+    strcpy(theApp.szEncKeyFileName,FileNameA);
+    HANDLE hKeyHandle = CreateFile(FileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hKeyHandle != NULL)
+    {
+        CString strMsg;
+        CStringA strMsgA;
+        m_Messagetext.GetWindowTextW(strMsg);
+        strMsgA = strMsg;
+        unsigned char *EncryptedMessage = new unsigned char[strMsgA.GetLength()+12];
+        if (EncryptedMessage)
+        {
+            char *EncryptedMessage2 = new char[(strMsgA.GetLength()+12)*2+1];
+            if (EncryptedMessage2)
+            {
+            
+                unsigned int szLenOut;
+                *(DWORD*)EncryptedMessage = strMsgA.GetLength();
+                *(DWORD*)&EncryptedMessage[4] = theApp.PosEncKey.LowPart;
+                *(DWORD*)&EncryptedMessage[8] = theApp.PosEncKey.HighPart;
+                memcpy(&EncryptedMessage[12], strMsgA,strMsgA.GetLength());
+                EncryptTotal(EncryptedMessage, strMsgA.GetLength()+12, EncryptedMessage, szLenOut, hKeyHandle, theApp.PosEncKey, FALSE);
+                for (int i =0; i < strMsgA.GetLength()+12; i++)
+                {
+                    sprintf(&EncryptedMessage2[i*2],"%02x", EncryptedMessage[i]);
+                }
+                strMsg = "=";
+                strMsg += EncryptedMessage2;
+                strMsg += "=";
+                m_Messagetext.SetWindowTextW(strMsg);
+                delete EncryptedMessage2;
+            }
+            delete EncryptedMessage;
+        }
+        CloseHandle(hKeyHandle);
+    }
 }
