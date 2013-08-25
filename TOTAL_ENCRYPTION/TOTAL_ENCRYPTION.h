@@ -45,6 +45,7 @@ public:
     char szDecOutFileName[_MAX_PATH];
     LARGE_INTEGER PosEncKey;
     LARGE_INTEGER PosDecKey;
+    BOOL bStrongEncryption;
 // Overrides
 public:
 	virtual BOOL InitInstance();

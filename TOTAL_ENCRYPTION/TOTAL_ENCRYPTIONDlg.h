@@ -25,6 +25,9 @@ class CTOTAL_ENCRYPTIONDlg : public CDialogEx
 {
 // Construction
 public:
+    float flSizeEnc;
+    float flSizeDec;
+
 	CTOTAL_ENCRYPTIONDlg(CWnd* pParent = NULL);	// standard constructor
 
 // Dialog Data
@@ -67,4 +70,7 @@ public:
     afx_msg void OnClickedButtonDecMsg();
     afx_msg void OnClickedButtonEncFile();
     afx_msg void OnClickedButtonEncMsg();
+//    BOOL m_StrongEncryption;
+//    afx_msg void OnClickedCheckStrong();
+    CButton m_StrongEncryption;
 };

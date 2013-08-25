@@ -127,6 +127,9 @@ BOOL CTOTAL_ENCRYPTIONApp::InitInstance()
     // TBD !!!! wrong ===  must be hexdesimal
     PosDecKey.HighPart = HexVal(szTemp);
 
+    memset(szTemp,0,sizeof(szTemp));
+    GetPrivateProfileStringA( "TOTAL_ENCRYPTION", "STRONG_ENCRYPTION", "0", szTemp, sizeof(szTemp)-1,szIniFileName);
+    bStrongEncryption = atoi(szTemp);
 	CTOTAL_ENCRYPTIONDlg dlg;
 	m_pMainWnd = &dlg;
     
@@ -152,6 +155,9 @@ BOOL CTOTAL_ENCRYPTIONApp::InitInstance()
     WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_POSL",(LPCSTR) szTemp, szIniFileName);
     sprintf(szTemp,"%lX",PosDecKey.HighPart);
     WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_POSH",(LPCSTR) szTemp, szIniFileName);
+
+    sprintf(szTemp,"%ld",bStrongEncryption);
+    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "STRONG_ENCRYPTION",(LPCSTR) szTemp, szIniFileName);
     
 
 	if (nResponse == IDOK)
