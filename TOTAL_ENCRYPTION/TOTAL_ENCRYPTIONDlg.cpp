@@ -462,6 +462,70 @@ BOOL CTOTAL_ENCRYPTIONDlg::DestroyWindow()
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecFile()
 {
     // TODO: Add your control notification handler code here
+    DWORD dwSize;
+    unsigned int szLenOut;
+    char szTemp[256];
+    CString FileNameInDec;
+    m_DecryptInFileName.GetWindowTextW(FileNameInDec);
+    CStringA FileNameInDecA = (CStringA)FileNameInDec;
+
+    CString FileNameOutDec;
+    m_DecryptOutFileName.GetWindowTextW(FileNameOutDec);
+    CStringA FileNameOutDecA = (CStringA)FileNameOutDec;
+
+    CString FileName;
+    m_DecryptKey.GetWindowTextW(FileName);
+    CStringA FileNameA = (CStringA)FileName;
+    strcpy(theApp.szEncKeyFileName,FileNameA);
+    HANDLE hKeyHandle = CreateFile(FileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hKeyHandle != INVALID_HANDLE_VALUE)
+    {
+        HANDLE hInFileHandle = CreateFile(FileNameInDec, GENERIC_READ , FILE_SHARE_READ, NULL, OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL, NULL);
+        if (hInFileHandle != INVALID_HANDLE_VALUE)
+        {
+            HANDLE hOutFileHandle = CreateFile(FileNameOutDec, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+            if (hOutFileHandle != INVALID_HANDLE_VALUE)
+            {
+                LARGE_INTEGER SizeOfVideoFile;
+                //GetFileSizeEx(hInFileHandle, &SizeOfVideoFile);
+                
+                unsigned char bBuffer[1024];
+                ReadFile(hInFileHandle, &SizeOfVideoFile, sizeof(SizeOfVideoFile),&dwSize, NULL);
+                unsigned __int64 VideoFileSize = (((unsigned __int64)  SizeOfVideoFile.HighPart)<<32) +
+                    (unsigned __int64)SizeOfVideoFile.LowPart;
+                ReadFile(hInFileHandle, &theApp.PosDecKey, sizeof(theApp.PosDecKey),&dwSize, NULL);
+                for (unsigned __int64 i64 =0; i64 < VideoFileSize; i64+=sizeof(bBuffer))
+                {
+                    if (ReadFile(hInFileHandle, bBuffer, sizeof(bBuffer),&dwSize,NULL))
+                    {
+                        if (dwSize > 0)
+                        {
+                            EncryptTotal(bBuffer, dwSize, bBuffer, szLenOut, hKeyHandle, theApp.PosDecKey, m_StrongEncryption.GetCheck());
+                            sprintf(szTemp,"%lX",theApp.PosDecKey.LowPart);
+                            WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_POSL",(LPCSTR) szTemp, theApp.szIniFileName);
+                            sprintf(szTemp,"%lX", theApp.PosDecKey.HighPart);
+                            WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_POSH",(LPCSTR) szTemp, theApp.szIniFileName);
+                            WriteFile(hOutFileHandle, bBuffer, dwSize,&dwSize, NULL);
+                            float flSizeUsed;
+                            if (flSizeDec>0.0)
+                            {
+                                flSizeUsed = theApp.PosDecKey.QuadPart;
+                                flSizeUsed = (flSizeUsed/flSizeDec)*100.0;
+                                m_DecryptFileUsage.SetPos(100.0 - flSizeUsed); 
+                            }
+                        }
+                    }
+                }
+                CloseHandle(hOutFileHandle);
+                CString strTemp;
+                strTemp = "";
+                m_DecryptInFileName.SetWindowTextW(strTemp);
+                m_DecryptOutFileName.SetWindowTextW(strTemp);
+            }
+            CloseHandle(hInFileHandle);
+        }
+        CloseHandle(hKeyHandle);
+    }
 }
 
 
@@ -529,9 +593,9 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecMsg()
                     }
                     EncryptTotal(DecryptedMessage, j, DecryptedMessage, szLenOut, hKeyHandle, theApp.PosDecKey, m_StrongEncryption.GetCheck());
                     sprintf(szTemp,"%lX",theApp.PosDecKey.LowPart);
-                    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSL",(LPCSTR) szTemp, theApp.szIniFileName);
+                    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_POSL",(LPCSTR) szTemp, theApp.szIniFileName);
                     sprintf(szTemp,"%lX", theApp.PosDecKey.HighPart);
-                    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSH",(LPCSTR) szTemp, theApp.szIniFileName);
+                    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "DEC_KEY_FILE_POSH",(LPCSTR) szTemp, theApp.szIniFileName);
                     DecryptedMessage[j]=0;
                     strMsg = DecryptedMessage;
                     m_Messagetext.SetWindowTextW(strMsg);
@@ -555,6 +619,78 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecMsg()
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncFile()
 {
     // TODO: Add your control notification handler code here
+    DWORD dwSize;
+    unsigned int szLenOut;
+    char szTemp[256];
+    CString FileNameInEnc;
+    m_EncryptInFileName.GetWindowTextW(FileNameInEnc);
+    CStringA FileNameInEncA = (CStringA)FileNameInEnc;
+
+    CString FileNameOutEnc;
+    m_EncryptOutFileName.GetWindowTextW(FileNameOutEnc);
+    CStringA FileNameOutEncA = (CStringA)FileNameOutEnc;
+
+    CString FileName;
+    m_EncryptKey.GetWindowTextW(FileName);
+    CStringA FileNameA = (CStringA)FileName;
+    strcpy(theApp.szEncKeyFileName,FileNameA);
+    HANDLE hKeyHandle = CreateFile(FileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hKeyHandle != INVALID_HANDLE_VALUE)
+    {
+        HANDLE hInFileHandle = CreateFile(FileNameInEnc, GENERIC_READ , FILE_SHARE_READ, NULL, OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL, NULL);
+        if (hInFileHandle != INVALID_HANDLE_VALUE)
+        {
+            LARGE_INTEGER SizeOfKeyFile;
+            GetFileSizeEx(hKeyHandle, &SizeOfKeyFile);
+
+            LARGE_INTEGER SizeInEncFile;
+            GetFileSizeEx(hInFileHandle, &SizeInEncFile);
+
+            if ((theApp.PosEncKey.QuadPart + SizeInEncFile.QuadPart) < SizeOfKeyFile.QuadPart)
+            {
+                HANDLE hOutFileHandle = CreateFile(FileNameOutEnc, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+                if (hOutFileHandle != INVALID_HANDLE_VALUE)
+                {
+                    LARGE_INTEGER SizeOfVideoFile;
+                    GetFileSizeEx(hInFileHandle, &SizeOfVideoFile);
+                    unsigned __int64 VideoFileSize = (((unsigned __int64)  SizeOfVideoFile.HighPart)<<32) +
+                        (unsigned __int64)SizeOfVideoFile.LowPart;
+                    unsigned char bBuffer[1024];
+                    WriteFile(hOutFileHandle, &SizeOfVideoFile, sizeof(SizeOfVideoFile),&dwSize, NULL);
+                    WriteFile(hOutFileHandle, &theApp.PosEncKey, sizeof(theApp.PosEncKey),&dwSize, NULL);
+                    for (unsigned __int64 i64 =0; i64 < VideoFileSize; i64+=sizeof(bBuffer))
+                    {
+                        if (ReadFile(hInFileHandle, bBuffer, sizeof(bBuffer),&dwSize,NULL))
+                        {
+                            if (dwSize > 0)
+                            {
+                                EncryptTotal(bBuffer, dwSize, bBuffer, szLenOut, hKeyHandle, theApp.PosEncKey, m_StrongEncryption.GetCheck());
+                                sprintf(szTemp,"%lX",theApp.PosEncKey.LowPart);
+                                WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSL",(LPCSTR) szTemp, theApp.szIniFileName);
+                                sprintf(szTemp,"%lX", theApp.PosEncKey.HighPart);
+                                WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSH",(LPCSTR) szTemp, theApp.szIniFileName);
+                                WriteFile(hOutFileHandle, bBuffer, dwSize,&dwSize, NULL);
+                                float flSizeUsed;
+                                if (flSizeEnc>0.0)
+                                {
+                                    flSizeUsed = theApp.PosEncKey.QuadPart;
+                                    flSizeUsed = (flSizeUsed/flSizeEnc)*100.0;
+                                    m_EncryptFileUsage.SetPos(100.0 - flSizeUsed); 
+                                }
+                            }
+                        }
+                    }
+                    CloseHandle(hOutFileHandle);
+                    CString strTemp;
+                    strTemp = "";
+                    m_EncryptInFileName.SetWindowTextW(strTemp);
+                    m_EncryptOutFileName.SetWindowTextW(strTemp);
+                }
+            }
+            CloseHandle(hInFileHandle);
+        }
+        CloseHandle(hKeyHandle);
+    }
 }
 
 
@@ -585,26 +721,31 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncMsg()
                 *(DWORD*)&EncryptedMessage[4] = theApp.PosEncKey.LowPart;
                 *(DWORD*)&EncryptedMessage[8] = theApp.PosEncKey.HighPart;
                 memcpy(&EncryptedMessage[12], strMsgA,strMsgA.GetLength());
-                EncryptTotal(&EncryptedMessage[12], strMsgA.GetLength(), &EncryptedMessage[12], szLenOut, hKeyHandle, theApp.PosEncKey, m_StrongEncryption.GetCheck());
-                sprintf(szTemp,"%lX",theApp.PosEncKey.LowPart);
-                WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSL",(LPCSTR) szTemp, theApp.szIniFileName);
-                sprintf(szTemp,"%lX", theApp.PosEncKey.HighPart);
-                WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSH",(LPCSTR) szTemp, theApp.szIniFileName);
-                for (int i =0; i < strMsgA.GetLength()+12; i++)
+                LARGE_INTEGER SizeOfKeyFile;
+                GetFileSizeEx(hKeyHandle, &SizeOfKeyFile);
+                if ((theApp.PosEncKey.QuadPart + strMsgA.GetLength()) < SizeOfKeyFile.QuadPart)
                 {
-                    sprintf(&EncryptedMessage2[i*2],"%02x", EncryptedMessage[i]);
-                }
-                strMsg = "=";
-                strMsg += EncryptedMessage2;
-                strMsg += "=";
-                m_Messagetext.SetWindowTextW(strMsg);
-                delete EncryptedMessage2;
-                float flSizeUsed;
-                if (flSizeEnc>0.0)
-                {
-                    flSizeUsed = theApp.PosEncKey.QuadPart;
-                    flSizeUsed = (flSizeUsed/flSizeEnc)*100.0;
-                    m_EncryptFileUsage.SetPos(100.0 - flSizeUsed); 
+                    EncryptTotal(&EncryptedMessage[12], strMsgA.GetLength(), &EncryptedMessage[12], szLenOut, hKeyHandle, theApp.PosEncKey, m_StrongEncryption.GetCheck());
+                    sprintf(szTemp,"%lX",theApp.PosEncKey.LowPart);
+                    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSL",(LPCSTR) szTemp, theApp.szIniFileName);
+                    sprintf(szTemp,"%lX", theApp.PosEncKey.HighPart);
+                    WritePrivateProfileStringA( "TOTAL_ENCRYPTION", "ENC_KEY_FILE_POSH",(LPCSTR) szTemp, theApp.szIniFileName);
+                    for (int i =0; i < strMsgA.GetLength()+12; i++)
+                    {
+                        sprintf(&EncryptedMessage2[i*2],"%02x", EncryptedMessage[i]);
+                    }
+                    strMsg = "=";
+                    strMsg += EncryptedMessage2;
+                    strMsg += "=";
+                    m_Messagetext.SetWindowTextW(strMsg);
+                    delete EncryptedMessage2;
+                    float flSizeUsed;
+                    if (flSizeEnc>0.0)
+                    {
+                        flSizeUsed = theApp.PosEncKey.QuadPart;
+                        flSizeUsed = (flSizeUsed/flSizeEnc)*100.0;
+                        m_EncryptFileUsage.SetPos(100.0 - flSizeUsed); 
+                    }
                 }
             }
             delete EncryptedMessage;
