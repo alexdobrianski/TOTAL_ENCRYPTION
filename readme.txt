@@ -41,16 +41,26 @@ c)	PIC processor based communication for satellite communication.
 
 
                                     Challenge.
-Person, translated this message:
+Translate this message:
+
 =65000000a000000000000000ed45a19834912670eeaace8cc71a0da73a27aa9cff844d1fdc177c1794a5a3913f4757bcfb55a2a4fdda15ca0d0c3a811f3bb68233100d3f6f1f6bda9cdcf60cada1b2f776bf74a4ac66631efe07ff2be56771d058fd9d439517c773adbf7180a3ad0835f1=
 
-using source code provided, key (used for encryption), original video (used for key generation) published on youtube, will receive 10 Lunaro Sterlings, if decryption will be done before 10 October, 2013.
+using:
+- source code provided, 
+- key (used for encryption), 
+- original video (used for key generation) published on youtube, 
 
-Avalable - source code:
-key file - 111.tkey
-youtube video -
+Anybody provided correct decrypted message before 10 October, 2013 
+will receive 10 Lunaro Sterlings.
 
-sample encrypted text used with the same key:
+Avalable :
+- source code:
+- key file - 111.tkey
+- youtube video -
+
+Sample:
+ - unencrypted text (same key file 111.tkey):
 NOW IS THE TIME FOR ALL GOOD MEN TO COME TO THE AID OF THE PARTY
+
 chiper text after encryption: 
 =400000000000000000000000584fba6e203321df73fe0c07f8fa9903d4d2c80ff0dd62ad87413cf289f5e1251d44766b9156d76495a022263be1b04fa8ab075fe8cc44b0e45a4ed60a2cb727=
