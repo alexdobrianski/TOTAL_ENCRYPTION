@@ -51,7 +51,7 @@ using:
 - original video (used for key generation) published on youtube, 
 
 Anybody provided correct decrypted message before 10 October, 2013 
-will receive 10 Lunaro Sterlings.
+will receive 10 Lunaro Sterlings award.
 
 Avalable :
 - source code:
