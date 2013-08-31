@@ -41,7 +41,7 @@ c)	PIC processor based communication for satellite communication.
 
 
                                     Challenge.
-Translate this message:
+Decipher this message:
 
 =65000000a000000000000000ed45a19834912670eeaace8cc71a0da73a27aa9cff844d1fdc177c1794a5a3913f4757bcfb55a2a4fdda15ca0d0c3a811f3bb68233100d3f6f1f6bda9cdcf60cada1b2f776bf74a4ac66631efe07ff2be56771d058fd9d439517c773adbf7180a3ad0835f1=
 
@@ -50,7 +50,7 @@ using:
 - key (used for encryption), 
 - original video (used for key generation) published on youtube, 
 
-Anybody provided correct decrypted message before 10 October, 2013 
+First person provided correct decrypted message before 10 October, 2013 
 will receive 10 Lunaro Sterlings award.
 
 Avalable :
