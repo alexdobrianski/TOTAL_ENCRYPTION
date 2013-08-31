@@ -52,11 +52,14 @@ using:
 
 First person provided correct decrypted message before 10 October, 2013 
 will receive 10 Lunaro Sterlings award.
+Deciphered text send via e-mail to adobri@shaw.ca with subject 
+"Encryption Challenge. Prize" and one line of deciphered text.
 
 Avalable :
 - source code:
 - key file - 111.tkey
-- youtube video -
+- youtube video included video file used 
+        in key generation - http://www.youtube.com/watch?v=jdMq4RzKZaU
 
 Sample:
  - unencrypted text (same key file 111.tkey):
