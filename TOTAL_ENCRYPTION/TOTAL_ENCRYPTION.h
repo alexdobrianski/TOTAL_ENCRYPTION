@@ -43,6 +43,9 @@ public:
     char szEncOutFileName[_MAX_PATH];
     char szDecInFileName[_MAX_PATH];
     char szDecOutFileName[_MAX_PATH];
+    char szUser[_MAX_PATH];
+    char szUserProfile[_MAX_PATH];
+    char szHistoryFile[_MAX_PATH];
     LARGE_INTEGER PosEncKey;
     LARGE_INTEGER PosDecKey;
     BOOL bStrongEncryption;
