@@ -73,4 +73,9 @@ public:
 //    BOOL m_StrongEncryption;
 //    afx_msg void OnClickedCheckStrong();
     CButton m_StrongEncryption;
+    CButton m_StoreInRegistry;
+    afx_msg void OnClickedCheckStrong();
+    afx_msg void OnClickedButtonHistory();
+    afx_msg void OnClickedButtonEditHistory();
+    afx_msg void OnClickedButtonDeleteHistory();
 };
