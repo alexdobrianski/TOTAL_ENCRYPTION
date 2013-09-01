@@ -36,7 +36,7 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
-
+    void SetUserNames(void);
 // Implementation
 protected:
 	HICON m_hIcon;
