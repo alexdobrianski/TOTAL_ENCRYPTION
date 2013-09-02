@@ -1,10 +1,17 @@
-================================================================================
-    MICROSOFT FOUNDATION CLASS LIBRARY : TOTAL_ENCRYPTION Project Overview
-===============================================================================
-
-The application wizard has created this TOTAL_ENCRYPTION application for
-you.  This application not only demonstrates the basics of using the Microsoft
-Foundation Classes but is also a starting point for writing your application.
+    2013 (C) Alex Dobrianski Satellite encryption communication
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+    Design and development by Team "Plan B" is licensed under 
+    a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+    http://creativecommons.org/licenses/by-sa/3.0/ 
 
 This file contains a summary of what you will find in each of the files that
 make up your TOTAL_ENCRYPTION application.
@@ -76,18 +83,4 @@ TOTAL_ENCRYPTION.manifest
 	from the application. The Application manifest  maybe included for redistribution
 	as an external .manifest file that is installed in the same folder as the application
 	executable or it may be included in the executable in the form of a resource.
-/////////////////////////////////////////////////////////////////////////////
-
-Other notes:
-
-The application wizard uses "TODO:" to indicate parts of the source code you
-should add to or customize.
-
-If your application uses MFC in a shared DLL, you will need
-to redistribute the MFC DLLs. If your application is in a language
-other than the operating system's locale, you will also have to
-redistribute the corresponding localized resources MFC100XXX.DLL.
-For more information on both of these topics, please see the section on
-redistributing Visual C++ applications in MSDN documentation.
-
 /////////////////////////////////////////////////////////////////////////////

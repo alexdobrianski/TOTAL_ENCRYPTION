@@ -14,8 +14,6 @@
     a Creative Commons Attribution-ShareAlike 3.0 Unported License.
     http://creativecommons.org/licenses/by-sa/3.0/ 
 */
-// TOTAL_ENCRYPTIONDlg.cpp : implementation file
-//
 
 #include "stdafx.h"
 #include "TOTAL_ENCRYPTION.h"
@@ -318,14 +316,6 @@ HCURSOR CTOTAL_ENCRYPTIONDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-
-//void CAboutDlg::OnButtonGenKey()
-//{
-//    // TODO: Add your command handler code here
-//}
-
-
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonGenKey()
 {
     // TODO: Add your control notification handler code here
@@ -440,7 +430,6 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonGenKey()
 
 BOOL CTOTAL_ENCRYPTIONDlg::DestroyWindow()
 {
-    // TODO: Add your specialized code here and/or call the base class
     CString strTemp;
     m_VIdeoFileName.GetWindowTextW(strTemp);
     CStringA strTempA = (CStringA)strTemp; 
@@ -481,7 +470,6 @@ BOOL CTOTAL_ENCRYPTIONDlg::DestroyWindow()
 
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecFile()
 {
-    // TODO: Add your control notification handler code here
     DWORD dwSize;
     unsigned int szLenOut;
     char szTemp[256];
@@ -553,7 +541,6 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecFile()
 
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecMsg()
 {
-    // TODO: Add your control notification handler code here
     unsigned int mesageLen;
     char szTemp[256];
     CString FileName;
@@ -642,7 +629,6 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecMsg()
 
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncFile()
 {
-    // TODO: Add your control notification handler code here
     DWORD dwSize;
     unsigned int szLenOut;
     char szTemp[256];
@@ -726,15 +712,25 @@ void CTOTAL_ENCRYPTIONDlg::SetUserNames(void)
     m_UserName.GetWindowTextW(UserName);
     CStringA UserNameA = (CStringA)UserName;
     if (UserNameA.GetLength())
+    {
         strcpy(theApp.szUser, UserNameA);
+        strcpy(theApp.szHistoryFile, theApp.szExeFileName);
+        strcat(theApp.szHistoryFile, "_LOG_HISTORY_");
+        strcat(theApp.szHistoryFile, theApp.szUser);
+        strcat(theApp.szHistoryFile, ".htm");
+    }
     else
+    {
         memset(theApp.szUser, 0 , sizeof(theApp.szUser));
+        strcpy(theApp.szHistoryFile, theApp.szExeFileName);
+        strcat(theApp.szHistoryFile, "_LOG_HISTORY_");
+        strcat(theApp.szHistoryFile, ".htm");
+    }
     if (strlen(theApp.szUser) !=0)
         strcat(theApp.szUserProfile, theApp.szUser);
 }
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncMsg()
 {
-    // TODO: Add your control notification handler code here
     CString FileName;
     m_EncryptKey.GetWindowTextW(FileName);
     CStringA FileNameA = (CStringA)FileName;
@@ -795,15 +791,10 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncMsg()
 }
 
 
-//void CTOTAL_ENCRYPTIONDlg::OnClickedCheckStrong()
-//{
-//    // TODO: Add your control notification handler code here
-//}
 
 
 void CTOTAL_ENCRYPTIONDlg::OnClickedCheckStrong()
 {
-    // TODO: Add your control notification handler code here
     theApp.bStrongEncryption =  m_StrongEncryption.GetCheck();
 
     if (theApp.bStrongEncryption)
@@ -817,17 +808,17 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedCheckStrong()
 
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonHistory()
 {
-    // TODO: Add your control notification handler code here
+    SetUserNames();
 }
 
 
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEditHistory()
 {
-    // TODO: Add your control notification handler code here
+    SetUserNames();
 }
 
 
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDeleteHistory()
 {
-    // TODO: Add your control notification handler code here
+    SetUserNames();
 }
