@@ -14,8 +14,6 @@
     a Creative Commons Attribution-ShareAlike 3.0 Unported License.
     http://creativecommons.org/licenses/by-sa/3.0/ 
 */
-// TOTAL_ENCRYPTION.h : main header file for the PROJECT_NAME application
-//
 
 #pragma once
 
@@ -34,6 +32,7 @@ class CTOTAL_ENCRYPTIONApp : public CWinApp
 {
 public:
 	CTOTAL_ENCRYPTIONApp();
+    char szExeFileName[_MAX_PATH];
     char szIniFileName[_MAX_PATH];
     char szVideoFileName[_MAX_PATH];
     char szEncKeyFileName[_MAX_PATH];

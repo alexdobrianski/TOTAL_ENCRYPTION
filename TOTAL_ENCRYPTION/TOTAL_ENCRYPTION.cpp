@@ -92,17 +92,15 @@ BOOL CTOTAL_ENCRYPTIONApp::InitInstance()
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
-    GetModuleFileNameA(  GetModuleHandle(NULL), (LPSTR) szIniFileName, sizeof(szIniFileName)-1);
-    char *DotPtr = strrchr(szIniFileName,'.');
+    GetModuleFileNameA(  GetModuleHandle(NULL), (LPSTR) szExeFileName, sizeof(szExeFileName)-1);
+    char *DotPtr = strrchr(szExeFileName,'.');
     if (DotPtr != NULL)
         *DotPtr = 0;
+    strcpy(szIniFileName, szExeFileName);
     strcat(szIniFileName, ".ini");
 
-    GetModuleFileNameA(  GetModuleHandle(NULL), (LPSTR) szHistoryFile, sizeof(szHistoryFile)-1);
-    DotPtr = strrchr(szHistoryFile,'.');
-    if (DotPtr != NULL)
-        *DotPtr = 0;
-    
+    strcpy(szHistoryFile, szExeFileName);
+
     GetPrivateProfileStringA( "ENCRYPTION", "ABONENT", "name", szUser, sizeof(szUser)-1,szIniFileName);
     strcpy(szUserProfile, "TOTAL_ENCRYPTION");
     if (memcmp(szUser,"name", sizeof("name")) !=0)
