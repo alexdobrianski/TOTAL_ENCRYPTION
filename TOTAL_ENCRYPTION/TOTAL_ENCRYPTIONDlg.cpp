@@ -608,6 +608,10 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDecMsg()
                     sprintf(szTemp,"%lX", theApp.PosDecKey.HighPart);
                     WritePrivateProfileStringA( theApp.szUserProfile, "DEC_KEY_FILE_POSH",(LPCSTR) szTemp, theApp.szIniFileName);
                     DecryptedMessage[j]=0;
+                    if ( m_StrongEncryption.GetCheck() == FALSE)
+                    {
+                        WriteLog("from",(char*)&DecryptedMessage[0]);
+                    }
                     strMsg = DecryptedMessage;
                     m_Messagetext.SetWindowTextW(strMsg);
                     delete DecryptedMessage;
@@ -729,8 +733,88 @@ void CTOTAL_ENCRYPTIONDlg::SetUserNames(void)
     if (strlen(theApp.szUser) !=0)
         strcat(theApp.szUserProfile, theApp.szUser);
 }
+void CTOTAL_ENCRYPTIONDlg::WriteLog(char *Direction, char *Message)
+{
+    char szTemp[10240];
+    DWORD dwSize;
+    HANDLE hLogHandle = CreateFileA(theApp.szHistoryFile, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hLogHandle != INVALID_HANDLE_VALUE)
+    {
+        if (GetLastError() != ERROR_ALREADY_EXISTS)
+        {
+            sprintf(szTemp,"\r\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\" >");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n<head>");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n    <title>Untitled Page</title>");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n    <style type=\"text/css\">");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n        .style1");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n        {");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n            font-family: \"Courier New\", Courier, monospace;");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n            color: #0000CC;");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n        }");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n        .style2");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n        {");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n            font-family: \"Courier New\", Courier, monospace;");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n            color: #CC3300;");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n        }");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n    </style>");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n</head>");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n<body>");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n    <hr />");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+
+            sprintf(szTemp,"\r\n</body>");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+            sprintf(szTemp,"\r\n</html>");
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+        }
+        LARGE_INTEGER SizeOfLogFile;
+        GetFileSizeEx(hLogHandle, &SizeOfLogFile);
+
+        SizeOfLogFile.QuadPart -= 18;
+        SetFilePointer(hLogHandle, SizeOfLogFile.LowPart, &SizeOfLogFile.HighPart, FILE_BEGIN);
+        SYSTEMTIME SystemTime;
+	    GetSystemTime(  &SystemTime  );
+        sprintf(szTemp,"\r\n    <p class=\"style1\">%04d/%02d/%02d %02d:%02d:%02d %s:%s</p>",SystemTime.wYear,SystemTime.wMonth,SystemTime.wDay
+            ,SystemTime.wHour,SystemTime.wMinute,SystemTime.wSecond,Direction,theApp.szUser);
+        WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+        if (strlen(Message) < sizeof(szTemp)-1)
+        {
+            sprintf(szTemp,"\r\n    <p> %s</p>",Message);
+            WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+        }
+        sprintf(szTemp,"\r\n    <hr />");
+        WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+
+        sprintf(szTemp,"\r\n</body>");
+        WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+        sprintf(szTemp,"\r\n</html>");
+        WriteFile(hLogHandle, szTemp, strlen(szTemp),&dwSize,NULL);
+        CloseHandle(hLogHandle);
+    }
+                
+}
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncMsg()
 {
+    SetUserNames();
     CString FileName;
     m_EncryptKey.GetWindowTextW(FileName);
     CStringA FileNameA = (CStringA)FileName;
@@ -742,9 +826,10 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncMsg()
         CStringA strMsgA;
         m_Messagetext.GetWindowTextW(strMsg);
         strMsgA = strMsg;
-        unsigned char *EncryptedMessage = new unsigned char[strMsgA.GetLength()+12];
+        unsigned char *EncryptedMessage = new unsigned char[strMsgA.GetLength()+12+1];
         if (EncryptedMessage)
         {
+            memset(EncryptedMessage, 0, strMsgA.GetLength()+12+1);
             char *EncryptedMessage2 = new char[(strMsgA.GetLength()+12)*2+1];
             if (EncryptedMessage2)
             {
@@ -755,13 +840,17 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEncMsg()
                 *(DWORD*)&EncryptedMessage[4] = theApp.PosEncKey.LowPart;
                 *(DWORD*)&EncryptedMessage[8] = theApp.PosEncKey.HighPart;
                 memcpy(&EncryptedMessage[12], strMsgA,strMsgA.GetLength());
+                if ( m_StrongEncryption.GetCheck() == FALSE)
+                {
+                    WriteLog("to", (char*)&EncryptedMessage[12]);
+                }
                 LARGE_INTEGER SizeOfKeyFile;
                 GetFileSizeEx(hKeyHandle, &SizeOfKeyFile);
                 if ((theApp.PosEncKey.QuadPart + strMsgA.GetLength()) < SizeOfKeyFile.QuadPart)
                 {
                     EncryptTotal(&EncryptedMessage[12], strMsgA.GetLength(), &EncryptedMessage[12], szLenOut, hKeyHandle, theApp.PosEncKey, m_StrongEncryption.GetCheck());
                     
-                    SetUserNames();
+                    
                     sprintf(szTemp,"%lX",theApp.PosEncKey.LowPart);
                     WritePrivateProfileStringA( theApp.szUserProfile, "ENC_KEY_FILE_POSL",(LPCSTR) szTemp, theApp.szIniFileName);
                     sprintf(szTemp,"%lX", theApp.PosEncKey.HighPart);
@@ -808,17 +897,24 @@ void CTOTAL_ENCRYPTIONDlg::OnClickedCheckStrong()
 
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonHistory()
 {
+    char szTemp[1024];
     SetUserNames();
+    sprintf(szTemp,"cmd /c \"start %s\"", theApp.szHistoryFile);
+    WinExec(szTemp,SW_SHOWNORMAL);
 }
 
 
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonEditHistory()
 {
+    char szTemp[1024];
     SetUserNames();
+    sprintf(szTemp,"notepad %s", theApp.szHistoryFile);
+    WinExec(szTemp,SW_SHOW);
 }
 
 
 void CTOTAL_ENCRYPTIONDlg::OnClickedButtonDeleteHistory()
 {
     SetUserNames();
+    DeleteFileA(theApp.szHistoryFile);
 }
