@@ -92,6 +92,7 @@ void CTOTAL_ENCRYPTIONDlg::DoDataExchange(CDataExchange* pDX)
     //  DDX_Check(pDX, IDC_CHECK_STRONG, m_StrongEncryption);
     DDX_Control(pDX, IDC_CHECK_STRONG, m_StrongEncryption);
     DDX_Control(pDX, IDC_CHECK_STORE_IN_HISTORY, m_StoreInRegistry);
+    DDX_Control(pDX, IDC_CHECK_UNICODE, m_Unicode);
 }
 
 BEGIN_MESSAGE_MAP(CTOTAL_ENCRYPTIONDlg, CDialogEx)
@@ -230,6 +231,7 @@ BOOL CTOTAL_ENCRYPTIONDlg::OnInitDialog()
     }
     else
         m_StoreInRegistry.EnableWindow(TRUE);
+    m_Unicode.EnableWindow(FALSE);
 
     flSizeEnc = 0.0;
     LARGE_INTEGER SizeOfVideoFile;
