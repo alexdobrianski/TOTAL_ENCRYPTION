@@ -77,4 +77,5 @@ public:
     afx_msg void OnClickedButtonHistory();
     afx_msg void OnClickedButtonEditHistory();
     afx_msg void OnClickedButtonDeleteHistory();
+    CButton m_Unicode;
 };
