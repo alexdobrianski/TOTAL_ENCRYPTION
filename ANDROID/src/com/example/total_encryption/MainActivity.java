@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
 		buttonEncrypt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) 
             {
-             	/*
+             	/* something important goes here
 			    SetUserNames();
 			    CString FileName;
 			    m_EncryptKey.GetWindowTextW(FileName);
