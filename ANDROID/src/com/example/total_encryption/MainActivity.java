@@ -214,10 +214,10 @@ public class MainActivity extends Activity {
 		buttonGenKey.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) 
             {
-             	//CharSequence MesageText = getText(R.id.editTextMessage);
-             	//EditText editText = (EditText)findViewById(R.id.editTextMessage);
-             	//editText.setText("", TextView.BufferType.EDITABLE);
-            	/*
+            	Intent intent = new Intent(MainActivity.this,FileChoose.class);
+                startActivity(intent);
+
+                /*
             	 DWORD dwError = 0;
     			long int Distr[256];
 			    for (int ii=0; ii <256; ii++)
