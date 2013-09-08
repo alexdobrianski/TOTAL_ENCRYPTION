@@ -1,3 +1,7 @@
+/**
+ * @author Alex/Sergei Dobrianski
+ */
+
 package com.example.total_encryption;
 
 import android.net.Uri;
