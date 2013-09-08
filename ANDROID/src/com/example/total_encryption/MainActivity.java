@@ -25,6 +25,174 @@ public class MainActivity extends Activity {
             }
         });
 		
+		final Button buttonEncrypt = (Button) findViewById(R.id.buttonEncrypt);
+		buttonEncrypt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) 
+            {
+             	/*
+			    SetUserNames();
+			    CString FileName;
+			    m_EncryptKey.GetWindowTextW(FileName);
+			    CStringA FileNameA = (CStringA)FileName;
+			    strcpy(theApp.szEncKeyFileName,FileNameA);
+			    HANDLE hKeyHandle = CreateFile(FileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL, NULL);
+			    if (hKeyHandle != INVALID_HANDLE_VALUE)
+			    {
+			        CString strMsg;
+			        CStringA strMsgA;
+			        m_Messagetext.GetWindowTextW(strMsg);
+			        strMsgA = strMsg;
+			        unsigned char *EncryptedMessage = new unsigned char[strMsgA.GetLength()+12+1];
+			        if (EncryptedMessage)
+			        {
+			            memset(EncryptedMessage, 0, strMsgA.GetLength()+12+1);
+			            char *EncryptedMessage2 = new char[(strMsgA.GetLength()+12)*2+1];
+			            if (EncryptedMessage2)
+			            {
+			            
+			                unsigned int szLenOut;
+			                char szTemp[256];
+			                *(DWORD*)EncryptedMessage = strMsgA.GetLength();
+			                *(DWORD*)&EncryptedMessage[4] = theApp.PosEncKey.LowPart;
+			                *(DWORD*)&EncryptedMessage[8] = theApp.PosEncKey.HighPart;
+			                memcpy(&EncryptedMessage[12], strMsgA,strMsgA.GetLength());
+			                if ( m_StrongEncryption.GetCheck() == FALSE)
+			                {
+			                    WriteLog("to", (char*)&EncryptedMessage[12]);
+			                }
+			                LARGE_INTEGER SizeOfKeyFile;
+			                GetFileSizeEx(hKeyHandle, &SizeOfKeyFile);
+			                if ((theApp.PosEncKey.QuadPart + strMsgA.GetLength()) < SizeOfKeyFile.QuadPart)
+			                {
+			                    EncryptTotal(&EncryptedMessage[12], strMsgA.GetLength(), &EncryptedMessage[12], szLenOut, hKeyHandle, theApp.PosEncKey, m_StrongEncryption.GetCheck());
+			                    
+			                    
+			                    sprintf(szTemp,"%lX",theApp.PosEncKey.LowPart);
+			                    WritePrivateProfileStringA( theApp.szUserProfile, "ENC_KEY_FILE_POSL",(LPCSTR) szTemp, theApp.szIniFileName);
+			                    sprintf(szTemp,"%lX", theApp.PosEncKey.HighPart);
+			                    WritePrivateProfileStringA( theApp.szUserProfile, "ENC_KEY_FILE_POSH",(LPCSTR) szTemp, theApp.szIniFileName);
+			                    for (int i =0; i < strMsgA.GetLength()+12; i++)
+			                    {
+			                        sprintf(&EncryptedMessage2[i*2],"%02x", EncryptedMessage[i]);
+			                    }
+			                    strMsg = "=";
+			                    strMsg += EncryptedMessage2;
+			                    strMsg += "=";
+			                    m_Messagetext.SetWindowTextW(strMsg);
+			                    delete EncryptedMessage2;
+			                    float flSizeUsed;
+			                    if (flSizeEnc>0.0)
+			                    {
+			                        flSizeUsed = theApp.PosEncKey.QuadPart;
+			                        flSizeUsed = (flSizeUsed/flSizeEnc)*100.0;
+			                        m_EncryptFileUsage.SetPos(100.0 - flSizeUsed); 
+			                    }
+			                }
+			            }
+			            delete EncryptedMessage;
+			        }
+			        CloseHandle(hKeyHandle);
+			    }
+             	 */
+            }
+        });
+		
+		final Button buttonDecrypt = (Button) findViewById(R.id.buttonDecrypt);
+		buttonDecrypt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) 
+            {
+             	/*
+             	 unsigned int mesageLen;
+			    char szTemp[256];
+			    CString FileName;
+			    m_DecryptKey.GetWindowTextW(FileName);
+			    CStringA FileNameA = (CStringA)FileName;
+			    strcpy(theApp.szDecKeyFileName,FileNameA);
+			    HANDLE hKeyHandle = CreateFile(FileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL, NULL);
+			    if (hKeyHandle != INVALID_HANDLE_VALUE)
+			    {
+			        CString strMsg;
+			        CStringA strMsgA;
+			        char hexLen[8+1];
+			        char hexLow[8+1];
+			        char hexHigh[8+1];
+			        memset(hexLen, 0, sizeof(hexLen));
+			        memset(hexLow, 0, sizeof(hexLow));
+			        memset(hexHigh, 0, sizeof(hexHigh));
+			        m_Messagetext.GetWindowTextW(strMsg);
+			        strMsgA = strMsg;
+			        unsigned char *EncryptedMessage = new unsigned char[strMsgA.GetLength()+1];
+			        
+			        if (EncryptedMessage)
+			        {
+			            memset(EncryptedMessage, 0, strMsgA.GetLength()+1);
+			            memcpy(EncryptedMessage, strMsgA,strMsgA.GetLength());
+			            if ((EncryptedMessage[0] == '=') && (EncryptedMessage[strMsgA.GetLength()-1] == '='))
+			            {
+			                memcpy(hexLen, &EncryptedMessage[1], 8);
+			                memcpy(hexLow, &EncryptedMessage[1+8], 8);
+			                memcpy(hexHigh, &EncryptedMessage[1+8+8], 8);
+			                mesageLen = ReverseHexVal(hexLen);
+			                theApp.PosDecKey.LowPart  = ReverseHexVal(hexLow);
+			                theApp.PosDecKey.HighPart = ReverseHexVal(hexHigh);
+			
+			                unsigned char *DecryptedMessage = new unsigned char[(strMsgA.GetLength())/2];
+			                if (DecryptedMessage)
+			                {
+			                    memset(DecryptedMessage, 0, (strMsgA.GetLength())/2);
+			                    unsigned int szLenOut;
+			                    int SizeOfRealMessage = ((strMsgA.GetLength()));
+			                    int j = 0;
+			                    for (int i=(1+8+8+8); i < (SizeOfRealMessage-1); i+=2,j++)
+			                    {
+			                        unsigned char chByte;
+			                        if ((EncryptedMessage[i] >= '0') && (EncryptedMessage[i] <= '9'))
+			                            chByte = EncryptedMessage[i] - '0';
+			                        else if ((EncryptedMessage[i] >= 'A') && (EncryptedMessage[i] <= 'F'))
+			                            chByte = EncryptedMessage[i] - 'A' + 10;
+			                        else if ((EncryptedMessage[i] >= 'a') && (EncryptedMessage[i] <= 'f'))
+			                            chByte = EncryptedMessage[i] - 'a' + 10;
+			                        chByte <<=4;
+			                        if ((EncryptedMessage[i+1] >= '0') && (EncryptedMessage[i+1] <= '9'))
+			                            chByte |= EncryptedMessage[i+1] - '0';
+			                        else if ((EncryptedMessage[i+1] >= 'A') && (EncryptedMessage[i+1] <= 'F'))
+			                            chByte |= EncryptedMessage[i+1] - 'A' + 10;
+			                        else if ((EncryptedMessage[i+1] >= 'a') && (EncryptedMessage[i+1] <= 'f'))
+			                            chByte |= EncryptedMessage[i+1] - 'a' + 10;
+			                        DecryptedMessage[j] =chByte;
+			                    }
+			                    EncryptTotal(DecryptedMessage, j, DecryptedMessage, szLenOut, hKeyHandle, theApp.PosDecKey, m_StrongEncryption.GetCheck());
+			                    
+			                    SetUserNames();
+			                    sprintf(szTemp,"%lX",theApp.PosDecKey.LowPart);
+			                    WritePrivateProfileStringA( theApp.szUserProfile, "DEC_KEY_FILE_POSL",(LPCSTR) szTemp, theApp.szIniFileName);
+			                    sprintf(szTemp,"%lX", theApp.PosDecKey.HighPart);
+			                    WritePrivateProfileStringA( theApp.szUserProfile, "DEC_KEY_FILE_POSH",(LPCSTR) szTemp, theApp.szIniFileName);
+			                    DecryptedMessage[j]=0;
+			                    if ( m_StrongEncryption.GetCheck() == FALSE)
+			                    {
+			                        WriteLog("from",(char*)&DecryptedMessage[0]);
+			                    }
+			                    strMsg = DecryptedMessage;
+			                    m_Messagetext.SetWindowTextW(strMsg);
+			                    delete DecryptedMessage;
+			                    float flSizeUsed;
+			                    if (flSizeDec>0.0)
+			                    {
+			                        flSizeUsed = theApp.PosDecKey.QuadPart;
+			                        flSizeUsed = (flSizeUsed/flSizeDec)*100.0;
+			                        m_DecryptFileUsage.SetPos(100.0 - flSizeUsed); 
+			                    }
+			                }
+			            }
+			            delete EncryptedMessage;
+			        }
+			        CloseHandle(hKeyHandle);
+			    }
+             	 */
+            }
+        });
+		
 		final Button buttonGenKey = (Button) findViewById(R.id.buttonGenerate);
 		buttonGenKey.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) 
