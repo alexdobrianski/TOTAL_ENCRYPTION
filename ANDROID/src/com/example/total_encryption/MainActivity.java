@@ -13,6 +13,7 @@
     Design and development by Team "Plan B" is licensed under 
     a Creative Commons Attribution-ShareAlike 3.0 Unported License.
     http://creativecommons.org/licenses/by-sa/3.0/ 
+    
  */
 package com.example.total_encryption;
 
@@ -46,7 +47,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) 
             {
              	/*
-			    	SetUserNames();
+			    SetUserNames();
 			    CString FileName;
 			    m_EncryptKey.GetWindowTextW(FileName);
 			    CStringA FileNameA = (CStringA)FileName;
