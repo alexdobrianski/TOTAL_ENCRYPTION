@@ -20,6 +20,8 @@ package com.example.total_encryption;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -214,9 +216,17 @@ public class MainActivity extends Activity {
 		buttonGenKey.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) 
             {
-            	Intent intent = new Intent(MainActivity.this,FileChoose.class);
-                startActivity(intent);
+//            	Dialog dialog = null;
+//                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
+//            	Intent intent = new Intent(MainActivity.this,FileChoose.class);
+//                startActivity(intent);
+//            	Intent intent = new Intent(MainActivity.this,FileDialog.class);
+//            	startActivity(intent);
+            	
+            	FileDialog fd = new FileDialog(MainActivity.this, "..");
+            	fd.createFileDialog();
+            	
                 /*
             	 DWORD dwError = 0;
     			long int Distr[256];

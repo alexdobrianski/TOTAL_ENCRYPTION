@@ -26,6 +26,10 @@
             android:name="com.example.total_encryption.FileChoose"
             android:label="@string/title_activity_file_choose" >
         </activity>
+        <activity
+            android:name="com.example.total_encryption.FileDialog"
+            android:label="@string/title_activity_file_dialog" >
+        </activity>
     </application>
 
 </manifest>

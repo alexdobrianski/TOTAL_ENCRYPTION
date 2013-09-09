@@ -21,9 +21,9 @@ import android.widget.TextView;
 
 public class FileChoose extends Activity {
 	private List<String> item = null;
-	 private List<String> path = null;
-	 private String root="/";
-	 private TextView myPath;
+	private List<String> path = null;
+	private String root="/";
+	private TextView myPath;
 	//@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,78 +56,77 @@ public class FileChoose extends Activity {
     //}
 	
 	private void getDir(String dirPath)
-
     {
-     myPath.setText("Location: " + dirPath);
-     item = new ArrayList<String>();
-     path = new ArrayList<String>();
-     File f = new File(dirPath);
-     File[] files = f.listFiles();
-     if (files != null)
-     {
-    	 if(!dirPath.equals(root))
-         {
-          item.add(root);
-          path.add(root);
-          item.add("../");
-          path.add(f.getParent());
-         }
+		myPath.setText("Location: " + dirPath);
+		item = new ArrayList<String>();
+		path = new ArrayList<String>();
+		File f = new File(dirPath);
+		File[] files = f.listFiles();
+		if (files != null)
+		{
+			if(!dirPath.equals(root))
+			{
+				item.add(root);
+				path.add(root);
+				item.add("../");
+				path.add(f.getParent());
+			}
          
          
-         for(int i=0; i < files.length; i++)
-         {
-           File file = files[i];
-           path.add(file.getPath());
-           if(file.isDirectory())
-            item.add(file.getName() + "/");
-           else
-            item.add(file.getName());
-         }
-
-         ArrayAdapter<String> fileList = new ArrayAdapter<String>(this, R.layout.row, item);
-         ListView myListView = (ListView)findViewById(R.id.Mylist);
-         myListView.setAdapter(fileList);
-	 
-     }
+			for(int i=0; i < files.length; i++)
+			{
+				File file = files[i];
+				path.add(file.getPath());
+				if(file.isDirectory())
+					item.add(file.getName() + "/");
+				else
+					item.add(file.getName());
+			}
+			
+			ArrayAdapter<String> fileList = new ArrayAdapter<String>(this, R.layout.row, item);
+			ListView myListView = (ListView)findViewById(R.id.Mylist);
+			myListView.setAdapter(fileList);
+			
+		}
      
     }
 
 
 
- protected void onListItemClick(ListView l, View v, int position, long id) {
-  File file = new File(path.get(position));
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		File file = new File(path.get(position));
 
-  if (file.isDirectory())
-  {
-   if(file.canRead())
-    getDir(path.get(position));
-   else
-   {
-    new AlertDialog.Builder(this)
-    .setIcon(R.drawable.ic_launcher)
-    .setTitle("[" + file.getName() + "] folder can't be read!")
-    .setPositiveButton("OK", 
-      new DialogInterface.OnClickListener() {
-       @Override
-       public void onClick(DialogInterface dialog, int which) {
-        // TODO Auto-generated method stub
-       }
-      }).show();
-   }
-  }
-  else
-  {
-   new AlertDialog.Builder(this)
-    .setIcon(R.drawable.ic_launcher)
-    .setTitle("[" + file.getName() + "]")
-    .setPositiveButton("OK", 
-      new DialogInterface.OnClickListener() {
-       @Override
-       public void onClick(DialogInterface dialog, int which) {
-        // TODO Auto-generated method stub
-       }
-      }).show();
-  }
- }
+		if (file.isDirectory())
+		{
+			if(file.canRead())
+				getDir(path.get(position));
+			else
+			{
+				new AlertDialog.Builder(this)
+				.setIcon(R.drawable.ic_launcher)
+				.setTitle("[" + file.getName() + "] folder can't be read!")
+				.setPositiveButton("OK", 
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							}
+				}).show();
+			}
+		}
+		else
+		{
+			new AlertDialog.Builder(this)
+			.setIcon(R.drawable.ic_launcher)
+			.setTitle("[" + file.getName() + "]")
+			.setPositiveButton("OK", 
+					new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				//TODO Auto-generated method stub
+				}
+			}).show();
+		}
+	}
 
 }
