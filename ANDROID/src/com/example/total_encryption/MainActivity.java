@@ -225,7 +225,7 @@ public class MainActivity extends Activity {
 //            	startActivity(intent);
             	
             	FileDialog fd = new FileDialog(MainActivity.this, "..");
-            	fd.createFileDialog();
+            	fd.createFileDialog(); //assign the file/doc/pic/video.
             	
                 /*
             	 DWORD dwError = 0;

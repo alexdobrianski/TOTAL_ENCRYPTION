@@ -35,6 +35,7 @@ public class FileDialog {
     private String fileEndsWith;
 
     /**
+     * Constructor
      * @param activity
      * @param initialPath
      */
@@ -140,8 +141,7 @@ public class FileDialog {
                     if (selectDirectoryOption)
                         return sel.isDirectory();
                     else {
-                        boolean endsWith = fileEndsWith != null ? filename
-                                .toLowerCase().endsWith(fileEndsWith) : true;
+                        boolean endsWith = fileEndsWith != null ? filename.toLowerCase().endsWith(fileEndsWith) : true;
                         return endsWith || sel.isDirectory();
                     }
                 }
