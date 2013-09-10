@@ -1,7 +1,25 @@
+/*  
+ * 2013 (C) Alex Dobrianski Satellite encryption communication
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+    Design and development by Team "Plan B" is licensed under 
+    a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+    http://creativecommons.org/licenses/by-sa/3.0/ 
+    
+ */
 package com.example.total_encryption;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.example.total_encryption.ListenerList.FireHandler;
@@ -12,6 +30,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Environment;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class FileDialog {
@@ -19,6 +39,7 @@ public class FileDialog {
     private final String TAG = getClass().getName();
     private String[] fileList;
     private File currentPath;
+    private String MyTitle ="choose";
 
     public interface FileSelectedListener {
         void fileSelected(File file);
@@ -32,6 +53,7 @@ public class FileDialog {
     private ListenerList<DirectorySelectedListener> dirListenerList = new ListenerList<FileDialog.DirectorySelectedListener>();
     private final Activity activity;
     private boolean selectDirectoryOption;
+    private boolean writefilename = false;
     private String fileEndsWith;
 
     /**
@@ -47,11 +69,22 @@ public class FileDialog {
     /**
      * @return file dialog
      */
-    public Dialog createFileDialog() {
-        Dialog dialog = null;
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-        builder.setTitle(currentPath.getPath());
+    public Dialog createFileDialog(String szTitle, boolean writef) {
+    	writefilename = writef;
+    	MyTitle = szTitle;
+    	Dialog dialog = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);//THEME_DEVICE_DEFAULT_DARK);
+        //builder.setInverseBackgroundForced (false);
+        
+        builder.setTitle(szTitle);//currentPath.getPath());
+        if (writefilename){
+        	//final TextView textEnterFileName = new TextView(activity);
+            //textEnterFileName.setText("enter file name:");
+            final EditText input = new EditText(activity);
+            //builder.setView(textEnterFileName);
+            builder.setView(input);	
+        }
+        
         /*
          * if (selectDirectoryOption) {
          * builder.setPositiveButton("Select directory", new OnClickListener() {
@@ -79,6 +112,8 @@ public class FileDialog {
             }
         });
         dialog = builder.show();
+        
+        
         return dialog;
     }
 
@@ -106,7 +141,7 @@ public class FileDialog {
      * Show file dialog
      */
     public void showDialog() {
-        createFileDialog().show();
+        createFileDialog(MyTitle,writefilename).show();
     }
 
     private void fireFileSelectedEvent(final File file) {
@@ -147,9 +182,18 @@ public class FileDialog {
                 }
             };
             String[] fileList1 = path.list(filter);
-            for (String file : fileList1) {
-                r.add(file);
+            if (fileList1 != null)
+            {
+            	for (String file : fileList1) 
+            	{
+            		
+                    r.add(file);
+                }
+            	Collections.sort(r, String.CASE_INSENSITIVE_ORDER);
+          	
             }
+            	
+            
         }
         fileList = (String[]) r.toArray(new String[] {});
     }
@@ -179,6 +223,7 @@ class ListenerList<L> {
     }
 
     public void fireEvent(FireHandler<L> fireHandler) {
+
         List<L> copy = new ArrayList<L>(listenerList);
         for (L l : copy) {
             fireHandler.fireEvent(l);

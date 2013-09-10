@@ -19,6 +19,7 @@ package com.example.total_encryption;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -30,6 +31,7 @@ import android.widget.*;
 public class MainActivity extends Activity {
 
 	@Override
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -211,7 +213,7 @@ public class MainActivity extends Activity {
              	 */
             }
         });
-		
+
 		final Button buttonGenKey = (Button) findViewById(R.id.buttonGenerate);
 		buttonGenKey.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) 
@@ -223,10 +225,29 @@ public class MainActivity extends Activity {
 //                startActivity(intent);
 //            	Intent intent = new Intent(MainActivity.this,FileDialog.class);
 //            	startActivity(intent);
+            	String root = Environment.getExternalStorageDirectory().getPath();
             	
-            	FileDialog fd = new FileDialog(MainActivity.this, "..");
-            	fd.createFileDialog(); //assign the file/doc/pic/video.
+        		
+            	FileDialog fd = new FileDialog(MainActivity.this, root);
+            	Dialog dialog = fd.createFileDialog("choose video file as a key source",true); //assign the file/doc/pic/video
+            	try
+            	{
+            		fd.wait();
+            	}
+            	catch (Exception e) 
+                {
+                }
             	
+
+            	//FileDialog fd2 = new FileDialog(MainActivity.this, root);
+            	//Dialog dialog2 = fd2.createFileDialog(); //assign the file/doc/pic/video
+            	//try
+            	//{
+            	//	wait();
+            	//}
+            	//catch (Exception e) 
+                //{
+                //}
                 /*
             	 DWORD dwError = 0;
     			long int Distr[256];
