@@ -40,7 +40,9 @@ public class FileDialog {
     private String[] fileList;
     private File currentPath;
     private String MyTitle ="choose";
-
+    public static File returnFile;
+    public static Boolean synced = false;
+    
     public interface FileSelectedListener {
         void fileSelected(File file);
     }
@@ -65,7 +67,7 @@ public class FileDialog {
         this.activity = activity; 
         loadFileList(new File(path));
     }
-
+    
     /**
      * @return file dialog
      */
@@ -102,8 +104,12 @@ public class FileDialog {
                     dialog.cancel();
                     dialog.dismiss();
                     showDialog();
-                } else
+                } else {
                     fireFileSelectedEvent(chosenFile);
+                    MainActivity.selectedFile = chosenFile;
+                    synced = true;
+                    
+                }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -117,6 +123,10 @@ public class FileDialog {
         return dialog;
     }
 
+    public File getSelectedFile() {
+    	return returnFile;
+    }
+    
     public void addFileListener(FileSelectedListener listener) {
         fileListenerList.add(listener);
     }
@@ -141,7 +151,7 @@ public class FileDialog {
      * Show file dialog
      */
     public void showDialog() {
-        createFileDialog(MyTitle,writefilename).show();
+        createFileDialog(MyTitle, writefilename).show();
     }
 
     private void fireFileSelectedEvent(final File file) {
