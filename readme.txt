@@ -50,8 +50,8 @@ using:
 - key (used for encryption), 
 - original video (used for key generation) published on youtube, 
 
-First person provided correct decrypted message before 10 October, 2013 
-will win 10 Lunaro Sterlings award.
+First person provided correct decrypted message before 10 November, 2013 
+will win 100 Lunaro Sterlings award.
 Deciphered text send via e-mail to adobri@shaw.ca with subject 
 "Encryption Challenge. Prize" and one line of deciphered text.
 
