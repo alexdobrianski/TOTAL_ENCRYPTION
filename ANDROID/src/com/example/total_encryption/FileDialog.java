@@ -106,8 +106,7 @@ public class FileDialog {
                     showDialog();
                 } else {
                     fireFileSelectedEvent(chosenFile);
-                    //MainActivity.selectedFile = chosenFile;
-                    returnFile = chosenFile;
+                    MainActivity.selectedFile = chosenFile;
                     synced = true;
                     
                 }

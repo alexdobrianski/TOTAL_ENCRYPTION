@@ -60,12 +60,9 @@ public class MainActivity extends Activity {
 		buttonEncrypt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) 
             {
-            	if(selectedFile != null) System.out.println(selectedFile.toString());
-            	if(selectedFile != null) {
-            		
-            		Toast t = Toast.makeText(getApplicationContext(), selectedFile.toString(), Toast.LENGTH_SHORT);
-            		t.show();
-            	}
+            	
+            	Toast t = Toast.makeText(getApplicationContext(), selectedFile.toString(), Toast.LENGTH_SHORT);
+            	t.show();
              	/* something important goes here
 			    SetUserNames();
 			    CString FileName;
