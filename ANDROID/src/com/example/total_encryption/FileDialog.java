@@ -28,6 +28,7 @@ import com.example.total_encryption.ListenerList.FireHandler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.widget.EditText;
@@ -40,9 +41,7 @@ public class FileDialog {
     private String[] fileList;
     private File currentPath;
     private String MyTitle ="choose";
-    public static File returnFile;
-    public static Boolean synced = false;
-    
+
     public interface FileSelectedListener {
         void fileSelected(File file);
     }
@@ -67,7 +66,7 @@ public class FileDialog {
         this.activity = activity; 
         loadFileList(new File(path));
     }
-    
+
     /**
      * @return file dialog
      */
@@ -104,12 +103,8 @@ public class FileDialog {
                     dialog.cancel();
                     dialog.dismiss();
                     showDialog();
-                } else {
+                } else
                     fireFileSelectedEvent(chosenFile);
-                    MainActivity.selectedFile = chosenFile;
-                    synced = true;
-                    
-                }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -123,10 +118,6 @@ public class FileDialog {
         return dialog;
     }
 
-    public File getSelectedFile() {
-    	return returnFile;
-    }
-    
     public void addFileListener(FileSelectedListener listener) {
         fileListenerList.add(listener);
     }
@@ -151,7 +142,7 @@ public class FileDialog {
      * Show file dialog
      */
     public void showDialog() {
-        createFileDialog(MyTitle, writefilename).show();
+        createFileDialog(MyTitle,writefilename).show();
     }
 
     private void fireFileSelectedEvent(final File file) {
@@ -171,7 +162,8 @@ public class FileDialog {
     }
 
     private void loadFileList(File path) {
-        this.currentPath = path;
+    	
+    	this.currentPath = path;
         List<String> r = new ArrayList<String>();
         if (path.exists()) {
             if (path.getParentFile() != null) {
@@ -183,12 +175,52 @@ public class FileDialog {
                     File sel = new File(dir, filename);
                     if (!sel.canRead())
                         return false;
-                    if (selectDirectoryOption)
+                    if (selectDirectoryOption){
+
                         return sel.isDirectory();
-                    else {
-                        boolean endsWith = fileEndsWith != null ? filename.toLowerCase().endsWith(fileEndsWith) : true;
-                        return endsWith || sel.isDirectory();
                     }
+                    else if(sel.isDirectory() && sel.canRead()){
+                		
+                		File newSel = new File(sel.getAbsolutePath());
+                		
+                		return getFiles(newSel);
+                	}
+                    else if(sel.isFile() && sel.getName().contains(".") && FileFormats.checkFileFormat(sel.getName().substring(sel.getName().lastIndexOf(".")))){ //also check for writable
+//                			String sub = sel.getName().substring(sel.getName().lastIndexOf("."));
+//                			String name = sel.getName();
+//                			if(sub.toLowerCase().equals(".jpg")){
+//	                			System.out.println(sub);
+//	                			System.out.println(sel.getName());
+	                			return true;
+                    }
+                    else if(sel.isFile() && sel.getName().charAt(0) == '.') return false;
+                    	
+                    else return false;
+                    
+                    	
+                    	
+                    	
+                        //boolean endsWith = fileEndsWith != null ? filename.toLowerCase().endsWith(fileEndsWith) : true;
+                    	//boolean endsWith = FileFormats.checkFileFormat(fileEndsWith);
+                        //return endsWith || sel.isDirectory();
+                    
+                }
+                public Boolean getFiles(File f){
+                	File files[] = f.listFiles();
+                	for(int i=0; i < files.length; ++i){
+                		
+                		if(files[i].isFile() && files[i].getName().contains(".") && FileFormats.checkFileFormat(files[i].getName().substring(files[i].getName().lastIndexOf(".")))){ //also check for writable
+//                			String sub = files[i].getName().substring(files[i].getName().lastIndexOf("."));
+//                			String name = files[i].getName();
+//                			if(sub.toLowerCase().equals(".jpg")){
+//	                			System.out.println(sub);
+//	                			System.out.println(files[i].getName());
+	                			return true;
+//                			}
+                		}
+                	}
+                	
+                	return false;
                 }
             };
             String[] fileList1 = path.list(filter);
@@ -196,8 +228,14 @@ public class FileDialog {
             {
             	for (String file : fileList1) 
             	{
-            		
-                    r.add(file);
+            		System.out.println("file :: " + file);
+            		//if(!file.contains("."))
+            			r.add(file);
+            		if(file.charAt(0) == '.')
+            			System.out.println(".");
+            		//else if(file.contains(".") && FileFormats.checkFileFormat(file.substring(file.lastIndexOf(".")))){
+            		//	r.add(file);
+            		//}
                 }
             	Collections.sort(r, String.CASE_INSENSITIVE_ORDER);
           	
@@ -206,6 +244,53 @@ public class FileDialog {
             
         }
         fileList = (String[]) r.toArray(new String[] {});
+        
+        
+//    	this.currentPath = path;
+//        List<String> r = new ArrayList<String>();
+//        if (path.exists()) {
+//            if (path.getParentFile() != null) {
+//            	System.out.println(path.getParentFile());
+//                r.add(PARENT_DIR);
+//            }
+//            FilenameFilter filter = new FilenameFilter() {
+//                public boolean accept(File dir, String filename) {
+//                    File sel = new File(dir, filename);
+//                    if (!sel.canRead())
+//                        return false;
+//                    if (selectDirectoryOption)
+//                        return sel.isDirectory();
+//                    else {
+//                    	if(fileEndsWith != null)
+//                    		System.out.println("fileEndsWith : " + fileEndsWith);
+//                        boolean endsWith = fileEndsWith != null ? filename.toLowerCase().endsWith(fileEndsWith) : true;
+                    	//boolean endsWith = FileFormats.checkFileFormat(fileEndsWith);
+//                        return endsWith || sel.isDirectory();
+//                    }
+//                }
+//            };
+//            String[] fileList1 = path.list(filter);
+//            if (fileList1 != null)
+//            {
+//            	for (String file : fileList1) 
+//            	{
+//            		System.out.println("file :: " + file);
+            		//if(!file.contains("."))
+//            			r.add(file);
+            		//else if(file.contains(".") && FileFormats.checkFileFormat(file.substring(file.lastIndexOf(".")))){
+            		//	r.add(file);
+            		//}
+//                }
+//            	Collections.sort(r, String.CASE_INSENSITIVE_ORDER);
+//          	
+//            }
+//            	
+//            
+//        }
+//        fileList = (String[]) r.toArray(new String[] {});        
+        
+        
+        
     }
 
     private File getChosenFile(String fileChosen) {
@@ -246,5 +331,5 @@ class ListenerList<L> {
 
     public List<L> getListenerList() {
         return listenerList;
-    }
+    }    
 }

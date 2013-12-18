@@ -17,29 +17,19 @@
  */
 package com.example.total_encryption;
 
-import java.io.File;
-import java.util.concurrent.CountDownLatch;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.*;
 
 public class MainActivity extends Activity {
 
-	String root = Environment.getExternalStorageDirectory().getPath();
-	FileDialog fd = new FileDialog(MainActivity.this, root);
-	public static File selectedFile;
-	
-	
 	@Override
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +50,6 @@ public class MainActivity extends Activity {
 		buttonEncrypt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) 
             {
-            	
-            	Toast t = Toast.makeText(getApplicationContext(), selectedFile.toString(), Toast.LENGTH_SHORT);
-            	t.show();
              	/* something important goes here
 			    SetUserNames();
 			    CString FileName;
@@ -227,8 +214,6 @@ public class MainActivity extends Activity {
             }
         });
 
-
-		
 		final Button buttonGenKey = (Button) findViewById(R.id.buttonGenerate);
 		buttonGenKey.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) 
@@ -240,44 +225,17 @@ public class MainActivity extends Activity {
 //                startActivity(intent);
 //            	Intent intent = new Intent(MainActivity.this,FileDialog.class);
 //            	startActivity(intent);
-
+            	String root = Environment.getExternalStorageDirectory().getPath();
             	
+        		
+            	FileDialog fd = new FileDialog(MainActivity.this, root);
+            	Dialog dialog = fd.createFileDialog("choose video file as a key source",true); //assign the file/doc/pic/video
             	try
             	{
-            		
-            		
-       				
-       				fd.createFileDialog("choose video file as a key source", false);
-       				new AsyncSelectFile().execute();
-
-/*    				}
-            		synchronized(this) {
-        				fd.createFileDialog("choose video file as a key source", false);
-            			this.notify();
-            		}
-            		
-            		synchronized(this) {
-            			this.notify();
-            		}
-*/            		
-/*
-            		CountDownLatch cdl = new CountDownLatch(1);
-                	FileDialog fd = new FileDialog(MainActivity.this, root);
-                	
-                	fd.createFileDialog("choose video file as a key source", false).notify(); //assign the file/doc/pic/video            		
-
-                	File selectedFile = fd.getSelectedFile();
-                	
-                	System.out.println(selectedFile.toString());
-                	Toast toast = Toast.makeText(getApplicationContext(), "testin", Toast.LENGTH_LONG);
-                	toast.show();
-*/
+            		fd.wait();
             	}
             	catch (Exception e) 
                 {
-            		System.out.println(e.getMessage());
-            		Toast toast = Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
-                	toast.show();
                 }
             	
 
@@ -400,7 +358,6 @@ public class MainActivity extends Activity {
             }
         });
 		
-		
 		final ImageButton buttonAdobri = (ImageButton) findViewById(R.id.imageButton1);
 		buttonAdobri.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) 
@@ -411,27 +368,8 @@ public class MainActivity extends Activity {
             	startActivity(i);
             }
         });
-		
 	}
 
-
-	
-	private void printFile() {
-	    final Handler handler = new Handler();
-		new Thread(new Runnable() {
-	        public void run() {
-	            
-	            handler.post(new Runnable() {
-	                public void run() {
-	            		Toast toast = Toast.makeText(getApplicationContext(), selectedFile.toString(), Toast.LENGTH_LONG);
-	                	toast.show();
-	                }
-	            });
-	        }
-	    }).start();	
-
-	}
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
