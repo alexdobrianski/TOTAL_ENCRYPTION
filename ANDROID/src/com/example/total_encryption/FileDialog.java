@@ -179,7 +179,9 @@ public class FileDialog {
 
                         return sel.isDirectory();
                     }
-                    else if(sel.isDirectory() && sel.canRead()){
+                    //else if(sel.getName().equals("DCIM") && sel.isDirectory())
+                    //	return true;
+                    else if(sel.isDirectory()){
                 		
                 		File newSel = new File(sel.getAbsolutePath());
                 		
@@ -206,7 +208,12 @@ public class FileDialog {
                     
                 }
                 public Boolean getFiles(File f){
+                	
                 	File files[] = f.listFiles();
+                	
+                	if(files.length == 0)
+                		return false;
+                	
                 	for(int i=0; i < files.length; ++i){
                 		
                 		if(files[i].isFile() && files[i].getName().contains(".") && FileFormats.checkFileFormat(files[i].getName().substring(files[i].getName().lastIndexOf(".")))){ //also check for writable
@@ -220,6 +227,15 @@ public class FileDialog {
                 		}
                 	}
                 	
+                	for(int i=0; i < files.length; ++i){
+                		
+                		if(files[i].isDirectory()){ //also check for writable
+                			Boolean hasVid = getFiles(new File(files[i].getAbsolutePath()));
+                			if(hasVid)
+                				return true;
+                		}
+                	}                	
+                	
                 	return false;
                 }
             };
@@ -230,9 +246,8 @@ public class FileDialog {
             	{
             		System.out.println("file :: " + file);
             		//if(!file.contains("."))
+
             			r.add(file);
-            		if(file.charAt(0) == '.')
-            			System.out.println(".");
             		//else if(file.contains(".") && FileFormats.checkFileFormat(file.substring(file.lastIndexOf(".")))){
             		//	r.add(file);
             		//}
