@@ -10,7 +10,6 @@ public class FileFormats {
 	private static String formatList[] = {VIDEO_3GPP, VIDEO_MPEG4, VIDEO_MPEGTS, VIDEO_WEBM, VIDEO_MKV};
 	
 	public static Boolean checkFileFormat(String format){
-		//return format.toLowerCase().equals(".jpg") ? true : false;
 		for(int i = 0; i < formatList.length; ++i)
 			if(format.toLowerCase().equals( formatList[i] ))
 				return true;
