@@ -36,6 +36,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class FileDialog {
+	public static File returnFile;
+	public static Boolean synced;	
+	
+	//public synchronized void setSync(Boolean state){
+	//	synced = state;
+	//}
+	
+	public synchronized Boolean getSync(){
+		return synced;
+	}
+	
+	synchronized void setSync(Boolean state){
+		synced = state;
+	}
+	
     private static final String PARENT_DIR = "..";
     private final String TAG = getClass().getName();
     private String[] fileList;
@@ -57,6 +72,10 @@ public class FileDialog {
     private boolean writefilename = false;
     private String fileEndsWith;
 
+    public static File getFile(){
+    	return returnFile;
+    }
+    
     /**
      * Constructor
      * @param activity
@@ -71,6 +90,7 @@ public class FileDialog {
      * @return file dialog
      */
     public Dialog createFileDialog(String szTitle, boolean writef) {
+    	
     	writefilename = writef;
     	MyTitle = szTitle;
     	dialog = null;
@@ -98,19 +118,27 @@ public class FileDialog {
             public void onClick(DialogInterface dialog, int which) {
                 String fileChosen = fileList[which];
                 File chosenFile = getChosenFile(fileChosen);
-                if (chosenFile.isDirectory()) {
-                	try{
+                try{
+                	if (chosenFile.isDirectory()) {
+                	
                 		loadFileList(chosenFile);
-                	}catch(Exception ex){
-                        dialog.cancel();
-                        dialog.dismiss();
-                        return;
-                	}
+	                    dialog.cancel();
+	                    dialog.dismiss();
+	                    showDialog();
+	                } else {
+	                    fireFileSelectedEvent(chosenFile);
+	                    //MainActivity.selectedFile = chosenFile;
+	                    returnFile = chosenFile;
+	                    //setSync( true );
+	                    FileManager fm = new FileManager();
+	                    fm.createRootDir();
+	                }
+                }catch(Exception ex){
                     dialog.cancel();
                     dialog.dismiss();
-                    showDialog();
-                } else
-                    fireFileSelectedEvent(chosenFile);
+                    Toast.makeText(activity, "You have reached the top root folder, please try choosing a file again.", Toast.LENGTH_LONG).show();
+                    return;
+            	}
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -17,6 +17,8 @@
  */
 package com.example.total_encryption;
 
+import java.io.File;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,9 +32,18 @@ import android.widget.*;
 
 public class MainActivity extends Activity {
 
+    String root = Environment.getExternalStorageDirectory().getPath();
+    FileDialog fd = new FileDialog(MainActivity.this, root);
+    public static File selectedFile;
+/*	
+    @Override
+    public void onStart() {
+    	FileManager fm = new FileManager();
+        fm.createRootDir();
+    }
+*/    
 	@Override
-	
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {        
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
@@ -50,6 +61,14 @@ public class MainActivity extends Activity {
 		buttonEncrypt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) 
             {
+            	
+            	if(selectedFile != null) System.out.println(selectedFile.toString());
+                if(selectedFile != null) {
+                        
+                        Toast t = Toast.makeText(getApplicationContext(), selectedFile.toString(), Toast.LENGTH_SHORT);
+                        t.show();
+                }
+            	
              	/* something important goes here
 			    SetUserNames();
 			    CString FileName;
@@ -225,6 +244,49 @@ public class MainActivity extends Activity {
 //                startActivity(intent);
 //            	Intent intent = new Intent(MainActivity.this,FileDialog.class);
 //            	startActivity(intent);
+
+            	
+                try
+                {
+                        
+                	//loadDialog();
+                                   
+                        fd.createFileDialog("choose video file as a key source", false);
+                                   //new AsyncSelectFile().execute();
+                                   //Toast.makeText(MainActivity.this, selectedFile.getName(), Toast.LENGTH_LONG);
+
+/*                                    }
+                        synchronized(this) {
+                                    fd.createFileDialog("choose video file as a key source", false);
+                                this.notify();
+                        }
+                        
+                        synchronized(this) {
+                                this.notify();
+                        }
+*/                            
+/*
+                        CountDownLatch cdl = new CountDownLatch(1);
+                    FileDialog fd = new FileDialog(MainActivity.this, root);
+                    
+                    fd.createFileDialog("choose video file as a key source", false).notify(); //assign the file/doc/pic/video                            
+
+                    File selectedFile = fd.getSelectedFile();
+                    
+                    System.out.println(selectedFile.toString());
+                    Toast toast = Toast.makeText(getApplicationContext(), "testin", Toast.LENGTH_LONG);
+                    toast.show();
+*/
+                }
+                catch (Exception e) 
+            {
+                        System.out.println(e.getMessage());
+                        Toast toast = Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+                    toast.show();
+            }            	
+            	
+            	
+/*            	
             	String root = Environment.getExternalStorageDirectory().getPath();
             	
         		
@@ -233,11 +295,13 @@ public class MainActivity extends Activity {
             	try
             	{
             		fd.wait();
+            		File chosenFile = fd.getFile();
+            		Toast.makeText(MainActivity.this, chosenFile.getName(), Toast.LENGTH_LONG);
             	}
             	catch (Exception e) 
                 {
                 }
-            	
+*/            	
 
             	//FileDialog fd2 = new FileDialog(MainActivity.this, root);
             	//Dialog dialog2 = fd2.createFileDialog(); //assign the file/doc/pic/video
@@ -370,6 +434,12 @@ public class MainActivity extends Activity {
         });
 	}
 
+	private void loadDialog(){
+		//new AsyncSelectFile().execute();
+		//new AsyncSelectFile(this, root).execute();
+		fd.createFileDialog("choose video file as a key source", false);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
