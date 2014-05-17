@@ -33,7 +33,7 @@ import android.widget.*;
 public class MainActivity extends Activity {
 
     String root = Environment.getExternalStorageDirectory().getPath();
-    FileDialog fd = new FileDialog(MainActivity.this, root);
+    
     public static File selectedFile;
 /*	
     @Override
@@ -45,6 +45,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {        
 		super.onCreate(savedInstanceState);
+		//super.setRequestedOrientation(MainActivity.SCREEN_ORIENTATION_LANDSCAPE);
 		setContentView(R.layout.activity_main);
 		
 		final Button buttonClean = (Button) findViewById(R.id.buttonClean);
@@ -250,8 +251,8 @@ public class MainActivity extends Activity {
                 {
                         
                 	//loadDialog();
-                                   
-                        fd.createFileDialog("choose video file as a key source", false);
+                	FileDialog fd = new FileDialog(MainActivity.this, root);        
+                    fd.createFileDialog("choose video file as a key source", false);
                                    //new AsyncSelectFile().execute();
                                    //Toast.makeText(MainActivity.this, selectedFile.getName(), Toast.LENGTH_LONG);
 
@@ -437,7 +438,7 @@ public class MainActivity extends Activity {
 	private void loadDialog(){
 		//new AsyncSelectFile().execute();
 		//new AsyncSelectFile(this, root).execute();
-		fd.createFileDialog("choose video file as a key source", false);
+		//fd.createFileDialog("choose video file as a key source", false);
 	}
 	
 	@Override

@@ -130,10 +130,13 @@ public class FileDialog {
 	                    //MainActivity.selectedFile = chosenFile;
 	                    returnFile = chosenFile;
 	                    //setSync( true );
-	                    FileManager fm = new FileManager();
-	                    fm.createRootDir();
+	                    FileManager fm = new FileManager(activity.getApplicationContext());
+	                    fm.writeFileInfo(activity.getApplicationContext(), returnFile.getPath());
+	                    //Toast toast = Toast.makeText(activity.getApplicationContext(), fm.readTmpFile(), Toast.LENGTH_LONG);
+	                    //toast.show();
 	                }
                 }catch(Exception ex){
+                	String value = ex.getMessage();
                     dialog.cancel();
                     dialog.dismiss();
                     Toast.makeText(activity, "You have reached the top root folder, please try choosing a file again.", Toast.LENGTH_LONG).show();
